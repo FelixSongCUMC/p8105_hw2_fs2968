@@ -95,6 +95,67 @@ filter(reformatted_t_data, route_name == "A", ada == TRUE) |>
 
 ## Problem 2, Trash Wheel Dataset
 
+We first read in the Trash Wheel Data-set and remove non-data entries and not including dumpster specific data. We also can adjust the names to be more reasonable and round the number of sports balls to the nearest integer and conver to an interger type using `as.integer`.
+
+```{r}
+trash_data = 
+  readxl::read_excel(
+    "data/202509 Trash Wheel Collection Data.xlsx", 
+    sheet="Mr. Trash Wheel", 
+    range="A2:N709",
+    na = c("#", "")) |> 
+  janitor::clean_names() |> 
+  mutate(
+    across(sports_balls, round),
+    across(sports_balls, as.integer),
+    owner = "Mr. Trash",
+    across(year, as.double)
+  )
+
+```
+Now we can grab the other two datasets and clean them using a similar process:
+
+```{r}
+prof_data = 
+  readxl::read_excel(
+    "data/202509 Trash Wheel Collection Data.xlsx", 
+    sheet="Professor Trash Wheel", 
+    range="A2:M134",
+    na = c("#", ""))|> 
+  janitor::clean_names() |> 
+  mutate(
+    owner = "Professor Trash",
+    )
+
+gwyn_data = 
+  readxl::read_excel(
+    "data/202509 Trash Wheel Collection Data.xlsx", 
+    sheet="Gwynns Falls Trash Wheel", 
+    range="A2:L351",
+    na = c("#", ""))|> 
+  janitor::clean_names() |> 
+  mutate(owner = "Gwynns Trash")
+
+```
+
+
+Now we can use the `bind_rows` function to join these data-sets together. Before that, we can create a column in all three called "owner", which designates who the data comes from, editted in the above code blocks. 
+
+```{r}
+total_trash = bind_rows(trash_data, prof_data, gwyn_data)
+```
+
+The resulting data-set `total_trash` is the combination of all three excel sheets. This combined data-set includes `r nrow(total_trash)` observations (rows) and `r ncol(total_trash)` variables (columns). There are both identification variables and descriptive variables. The identification variables include `r names(total_trash)[0:4]`, which help us identify the dumpsters and when the were observed. The descriptive variables include `r names(total_trash)[5:ncol(total_trash)]`, which describe the weight, volume, and breakdown of what is found in the dumpster. The weight is measured in tons with mean value of `r mean(pull(total_trash, weight_tons))`, and the volume is measured in cubic yards with an mean value of `r mean(pull(total_trash, volume_cubic_yards)) `. The other descriptive variables that detail what actual items are in the dumpters use integer interpretations, for example, the first 3 dumpsters had `r pull(total_trash, plastic_bags)[0:3]` plastic bags.
+
+For the available data, the total weight of trash collected by Professor Trash Wheel was `r sum(pull(total_trash, weight_tons))` tons. We can additionally find the total number of cigarette butts collected by Gwynnda in June of 2022 as `r sum(pull(filter(total_trash, owner == "Gwynns Trash", month == "June", year == 2022), cigarette_butts))`.
+
+
+## Problem 3, Alzheimer's Disease Dataset
+
+
+
+
+
 
 
 
