@@ -152,6 +152,107 @@ For the available data, the total weight of trash collected by Professor Trash W
 
 ## Problem 3, Alzheimer's Disease Dataset
 
+First, we need to import, clean, and tidy the dataset.
+```{r}
+a_data = 
+  read_csv("data/data_mci/MCI_baseline.csv",
+           na = c("NA", ".", ""),
+           skip= 1
+           ) |> 
+  janitor::clean_names() |> 
+  mutate(
+    sex = case_match(
+      sex, 
+      1 ~ "Male",
+      0 ~ "Female"
+    ),
+    apoe4 = case_match(
+      apoe4,
+      1 ~ TRUE,
+      0 ~ FALSE
+    )
+  )
+#We don't include the filter in the a_data because we need to describe the number of people filtered out later
+a_valid_data = filter(a_data, !current_age > age_at_onset | is.na(age_at_onset))
+
+```
+
+We import our dataset with the usual `read_csv` function and mark "NA", ".", and "" as the potential na values. Taking a look at the data, it seems like . is the used na value. Next, we use clean names to make sure the names are consistent and easy to use, then we use the mutate function to change the sex variable to characters "Male" and "Female" and change the APOE4 gene variables to `TRUE` and `FALSE` since it designates whether that gene is present. Lastly, we removed any participants who had an age of onset prior to the baseline using the `filter` function. Note, we include those with na values for age of onset since those are participants who were in the study to not develop MCI during the study.
+
+For relevant features of the dataset, there are `r nrow(a_valid_data)` valid participants (rows) and `r ncol(a_valid_data)` variables per participant. These variables include `r names(a_valid_data)`, which help describe participants risk of developing MCI given age, education, sex, and presence of the APEO4 gene. In total, there were `r nrow(a_data)` participants recruited, but since `r nrow(filter(a_data, current_age > age_at_onset))` participants had MCI at baseline, we only include `r nrow(a_valid_data)` participants in our analysis. Of these valid participants, `r nrow(filter(a_valid_data, !is.na(age_at_onset)))` developed MCI during the study and follow-up period. The average baseline age is `r mean(pull(a_valid_data, current_age))` and `r (nrow(filter(a_valid_data, sex == "Female")) / nrow(a_valid_data)) * 100` percent of the study is women participants, and `r (nrow(filter(a_valid_data, sex == "Female", apoe4 == TRUE)) / nrow(filter(a_valid_data, sex == "Female"))) * 100` percent of women in the study are APOE4 carriers.
+
+
+Next, we can import the biomarker dataset.
+
+```{r}
+b_data = 
+  read_csv("data/data_mci/mci_amyloid.csv",
+           skip = 1,
+           na = c("NA", "Na")) |> 
+  janitor::clean_names() |> 
+  rename(time_0 = baseline) |> 
+  pivot_longer(
+    time_0:time_8,
+    names_to = "years_elapsed",
+    names_prefix = "time_",
+    values_to = "amyloid_ratio"
+  ) |> 
+  mutate(
+    across(years_elapsed, as.double),
+    across(amyloid_ratio, as.double)
+  )
+
+```
+
+First, we import the data, skip the first row since its descriptive and not relevant, and mark "NA" and "Na" as the missing value. Then we can clean names to make them consistent and easy to use. Next, we can look at our data and see that the column names `r names(b_data)[1:5]` are observed values, where the baseline and biomarker measurements are described as "Time (in years) elapsed since the study baseline to the visit where biomarker Amyloid _ 42/40 ratio was measured". Subsequently, we use the `pivot_longer` function to transform these into two columns, years elapsed and amyloid ratio. Before that, we also want to change the baseline variable to time_0, so it aligns with the other column names that we want to transform. Lastly, we change the all values from characters to doubles so that they are mathematically interpretable.
+
+The cleaned dataset has `r nrow(b_data)` participants (rows) with `r names(b_data)` as the data points we have for each participants (cols). For the years_elapsed column, we have values `r unique(pull(b_data, years_elapsed))` for each participant, tracking the amyloid ratio through the study. For example, we have baseline/years elapsed equal to 0 with a mean value of `r mean(!is.na(pull(filter(b_data, years_elapsed == 0), amyloid_ratio)))`.
+
+Now, we can check the number of participants who appear only in the baseline or only in the amyloid dataset. To accomplish this, we can use the `left_join` function to join the baseline dataset to the amyloid dataset by the id/study id variables. Once they are joined, for participants who only appear in the baseline, we can just check if they have NA values for the amyloid ratio, which would mean that they are not in the amyloid dataset. We can similarly check who is only in the Amyloid dataset by switching the order of datasets in `left_join` and changing the criteria to whether education exists (or any other variable in baseline dataset that does not exist in amyloid dataset).
+
+Note, since we originally changed the amyloid dataset to have time set as one column, there are ids with multiple instances for each elapsed year, so here, we use the pre-pivoted dataset since there is only one row per id. Additionally, for the participants who only were in the amyloid dataset, we generically chose education as the field to indicate whether someone was in the baseline dataset, so we do an additional check at the end to make sure there were no NA values in education for those in the baseline dataset, which results in zero.
+
+```{r}
+b_data_original = 
+  read_csv("data/data_mci/mci_amyloid.csv",
+           skip = 1,
+           na = c("NA", "Na")) |> 
+  janitor::clean_names() |> 
+  rename(time_0 = baseline)
+
+unique_a =
+  left_join(a_valid_data, b_data_original, by = c("id" = "study_id")) |> 
+  filter(if_all(starts_with("time_"), is.na)) |> 
+  distinct()
+
+unique_b =
+  left_join(b_data_original,a_valid_data , by = c("study_id" = "id")) |> 
+  filter(is.na(education)) |> 
+  distinct()
+
+cat("The number of participants only in baseline dataset is", nrow(unique_a))
+cat("The number of participants only in amyloid dataset is", nrow(unique_b))
+cat("The number of participants in baseline dataset with missing education is", nrow(filter(a_valid_data, is.na(education))))
+```
+
+As mentioned in the output code, we can see that there are 8 participants only in the baseline dataset and 15 participants only in the amyloid dataset. Of those only included in the baseline, only `r nrow(filter(unique_a, !is.na(age_at_onset)))` developed MCI and of those only included in the amyloid dataset, only `r nrow(filter(unique_b, is.na(time_0)))` did not record a baseline amyloid ratio.
+
+Now looking at the participants who were in both baseline and amyloid datasets, we can build the entire combined dataset and then remove those who's ids align with the ones we just found to not be in either dataset. Since the `left_join` function will already remove those ids not in baseline, all we need to do is remove those that are only in baseline using `filter`.
+
+```{r}
+combined_data = 
+  left_join(a_valid_data, b_data, by = c("id" = "study_id")) |> 
+  filter(!id %in% pull(unique_a, id))
+
+```
+
+The resulting dataset has `r nrow(combined_data)` data points (rows), where each datapoint is a participant at a specific elapsed year, and it has `r ncol(combined_data)` variables per observation (cols). In this dataset, we have only included participants of both the baseline and amyloid datasets. At the baseline year of those who were measured, they have an average age of `r round(mean(pull(filter(combined_data, years_elapsed == 0), current_age), na.rm = TRUE), 2)` years old and average amyloid ratio of `r round(mean(pull(filter(combined_data, years_elapsed == 0), amyloid_ratio), na.rm = TRUE), 4)`.
+
+```{r}
+write_csv(combined_data, "data/combined_data.csv")
+```
+
+
 
 
 
