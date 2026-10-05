@@ -64,7 +64,6 @@ id,current_age,sex,education,apoe4,age_at_onset,years_elapsed,amyloid_ratio
 13,63.1,Male,12,TRUE,69,4,0.108100808
 13,63.1,Male,12,TRUE,69,6,0.109229662
 13,63.1,Male,12,TRUE,69,8,0.104861901
-14,58.4,Female,20,FALSE,66.2,NA,NA
 15,68.4,Male,20,FALSE,NA,0,0.111544948
 15,68.4,Male,20,FALSE,NA,2,NA
 15,68.4,Male,20,FALSE,NA,4,0.110798711
@@ -235,7 +234,6 @@ id,current_age,sex,education,apoe4,age_at_onset,years_elapsed,amyloid_ratio
 48,67.3,Male,16,FALSE,NA,4,0.104885905
 48,67.3,Male,16,FALSE,NA,6,0.109693764
 48,67.3,Male,16,FALSE,NA,8,0.111567623
-49,64.7,Male,16,FALSE,68.4,NA,NA
 50,67.6,Female,18,TRUE,NA,0,0.107169039
 50,67.6,Female,18,TRUE,NA,2,0.10473295
 50,67.6,Female,18,TRUE,NA,4,0.108557518
@@ -441,7 +439,6 @@ id,current_age,sex,education,apoe4,age_at_onset,years_elapsed,amyloid_ratio
 91,63.4,Male,16,TRUE,NA,4,0.104867456
 91,63.4,Male,16,TRUE,NA,6,0.107243697
 91,63.4,Male,16,TRUE,NA,8,0.103342003
-92,68.6,Female,20,FALSE,NA,NA,NA
 93,68.5,Male,16,TRUE,NA,0,0.107302948
 93,68.5,Male,16,TRUE,NA,2,0.10815066
 93,68.5,Male,16,TRUE,NA,4,0.102894277
@@ -872,7 +869,6 @@ id,current_age,sex,education,apoe4,age_at_onset,years_elapsed,amyloid_ratio
 178,71.2,Female,20,FALSE,NA,4,0.110068277
 178,71.2,Female,20,FALSE,NA,6,0.104541101
 178,71.2,Female,20,FALSE,NA,8,0.106985618
-179,68.1,Male,16,FALSE,NA,NA,NA
 180,68.6,Male,16,FALSE,NA,0,0.113806433
 180,68.6,Male,16,FALSE,NA,2,NA
 180,68.6,Male,16,FALSE,NA,4,0.114042045
@@ -1313,7 +1309,6 @@ id,current_age,sex,education,apoe4,age_at_onset,years_elapsed,amyloid_ratio
 267,63.7,Male,16,FALSE,NA,4,0.112249598
 267,63.7,Male,16,FALSE,NA,6,0.115404869
 267,63.7,Male,16,FALSE,NA,8,0.111303622
-268,61.4,Female,18,TRUE,67.5,NA,NA
 269,64,Male,20,FALSE,NA,0,0.110360136
 269,64,Male,20,FALSE,NA,2,0.108676655
 269,64,Male,20,FALSE,NA,4,0.111362252
@@ -1484,7 +1479,6 @@ id,current_age,sex,education,apoe4,age_at_onset,years_elapsed,amyloid_ratio
 303,70.9,Male,16,FALSE,NA,4,0.10645713
 303,70.9,Male,16,FALSE,NA,6,0.1134974
 303,70.9,Male,16,FALSE,NA,8,0.108602524
-304,63.8,Female,16,FALSE,NA,NA,NA
 305,70,Female,18,TRUE,77.2,0,0.106575146
 305,70,Female,18,TRUE,77.2,2,0.109139729
 305,70,Female,18,TRUE,77.2,4,0.107237307
@@ -1900,7 +1894,6 @@ id,current_age,sex,education,apoe4,age_at_onset,years_elapsed,amyloid_ratio
 388,66,Female,16,FALSE,NA,4,0.109345677
 388,66,Female,16,FALSE,NA,6,0.109233323
 388,66,Female,16,FALSE,NA,8,0.108428963
-389,59.3,Female,16,FALSE,NA,NA,NA
 390,62.6,Female,16,FALSE,NA,0,0.111920365
 390,62.6,Female,16,FALSE,NA,2,0.113983819
 390,62.6,Female,16,FALSE,NA,4,NA
@@ -2011,7 +2004,6 @@ id,current_age,sex,education,apoe4,age_at_onset,years_elapsed,amyloid_ratio
 411,63.8,Male,16,TRUE,NA,4,0.109323546
 411,63.8,Male,16,TRUE,NA,6,0.108688383
 411,63.8,Male,16,TRUE,NA,8,0.108075209
-412,67,Male,16,TRUE,NA,NA,NA
 413,68.4,Male,20,FALSE,NA,0,0.108723744
 413,68.4,Male,20,FALSE,NA,2,0.111658125
 413,68.4,Male,20,FALSE,NA,4,0.108361884
