@@ -95,15 +95,15 @@ filter(reformatted_t_data, route_name == "A", ada == TRUE) |>
 
 ## Problem 2, Trash Wheel Dataset
 
-We first read in the Trash Wheel Data-set and remove non-data entries and not including dumpster specific data. We also can adjust the names to be more reasonable and round the number of sports balls to the nearest integer and conver to an interger type using `as.integer`.
+We first read in the Trash Wheel Data-set and remove non-data entries and not including dumpster specific data. We also can adjust the names to be more reasonable and round the number of sports balls to the nearest integer and convert to an integer type using `as.integer`.
 
 ```{r}
 trash_data = 
   readxl::read_excel(
-    "data/202509 Trash Wheel Collection Data.xlsx", 
+    "data/202610 Trash Wheel Collection Data.xlsx", 
     sheet="Mr. Trash Wheel", 
-    range="A2:N709",
-    na = c("#", "")) |> 
+    range="A2:N742",
+    na = c("NA", "", ".")) |> 
   janitor::clean_names() |> 
   mutate(
     across(sports_balls, round),
@@ -118,10 +118,10 @@ Now we can grab the other two datasets and clean them using a similar process:
 ```{r}
 prof_data = 
   readxl::read_excel(
-    "data/202509 Trash Wheel Collection Data.xlsx", 
+    "data/202610 Trash Wheel Collection Data.xlsx", 
     sheet="Professor Trash Wheel", 
-    range="A2:M134",
-    na = c("#", ""))|> 
+    range="A2:M139",
+    na = c("NA", "", ".", "dive"))|> 
   janitor::clean_names() |> 
   mutate(
     owner = "Professor Trash",
@@ -129,10 +129,10 @@ prof_data =
 
 gwyn_data = 
   readxl::read_excel(
-    "data/202509 Trash Wheel Collection Data.xlsx", 
-    sheet="Gwynns Falls Trash Wheel", 
-    range="A2:L351",
-    na = c("#", ""))|> 
+    "data/202610 Trash Wheel Collection Data.xlsx", 
+    sheet="Gwynnda the Good Wheel of the W", 
+    range="A2:L394",
+    na = c("NA", "", "."))|> 
   janitor::clean_names() |> 
   mutate(owner = "Gwynns Trash")
 
