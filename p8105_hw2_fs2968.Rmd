@@ -150,7 +150,7 @@ The resulting data-set `total_trash` is the combination of all three excel sheet
 For the available data, the total weight of trash collected by Professor Trash Wheel was `r sum(pull(total_trash, weight_tons))` tons. We can additionally find the total number of cigarette butts collected by Gwynnda in June of 2022 as `r sum(pull(filter(total_trash, owner == "Gwynns Trash", month == "June", year == 2022), cigarette_butts))`.
 
 
-## Problem 3, Alzheimer's Disease Dataset
+## Problem 3, Alzheimer's Disease Dataset 
 
 First, we need to import, clean, and tidy the dataset.
 ```{r}
